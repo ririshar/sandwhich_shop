@@ -12,9 +12,27 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Sandwich Shop App',
       home: Scaffold(
-        appBar: AppBar(title: const Text('Sandwhich Counter')),
-        body: const Center(
-          child: OrderItemDisplay(5, 'Footlong'),
+        appBar: AppBar(title: const Text('Sandwich Counter')),
+        body: Center(
+          child: Container(
+            width: 440,
+            height: 120,
+            color: Colors.white,
+            padding: const EdgeInsets.all(12),
+            alignment: Alignment.center,
+             child: Row( // changed from Column to Row
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  OrderItemDisplay(5, 'Footlong'),
+                  SizedBox(width: 12),
+                  OrderItemDisplay(2, 'Six-inch'),
+                  SizedBox(width: 12),
+                  OrderItemDisplay(3, 'Club'),
+                ],
+              ),
+            ),
         ),
       ),
     );
@@ -29,9 +47,23 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+    return Container(
+      width: 120, // change to 100, 150, 300 to experiment
+      height: 80, // make smaller to force overflow
+      color: Colors.pink, // visible background
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        '$quantity $itemType sandwich(es): ${'🥪' * quantity}',
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis, // see truncated text when too big
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
+
 //class MyApp extends StatelessWidget {
 //  const MyApp({super.key});
 
