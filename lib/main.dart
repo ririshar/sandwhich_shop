@@ -14,26 +14,27 @@ class App extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('Sandwich Counter')),
         body: Center(
-          child: Container(
-            width: 440,
-            height: 120,
-            color: Colors.white,
-            padding: const EdgeInsets.all(12),
-            alignment: Alignment.center,
-             child: Row( // changed from Column to Row
-                mainAxisSize: MainAxisSize.min,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const OrderItemDisplay(5, 'Footlong'),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  OrderItemDisplay(5, 'Footlong'),
-                  SizedBox(width: 12),
-                  OrderItemDisplay(2, 'Six-inch'),
-                  SizedBox(width: 12),
-                  OrderItemDisplay(3, 'Club'),
+                children: [
+                  ElevatedButton(
+                    onPressed: () => print('Add button pressed!'),
+                    child: const Text('Add'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => print('Remove button pressed!'),
+                    child: const Text('Remove'),
+                  ),
                 ],
               ),
-            ),
+            ],
+          ),
         ),
+        // The bit that you need to update ends here
       ),
     );
   }
