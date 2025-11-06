@@ -29,16 +29,29 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
+  final TextEditingController _noteController = TextEditingController();
+  String _note = '';
+
   void _increaseQuantity() {
+    // read current note before updating quantity
+    _note = _noteController.text.trim();
     if (_quantity < widget.maxQuantity) {
       setState(() => _quantity++);
     }
   }
 
   void _decreaseQuantity() {
+    // read current note before updating quantity
+    _note = _noteController.text.trim();
     if (_quantity > 0) {
       setState(() => _quantity--);
     }
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,10 +64,30 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Notes input field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              child: TextField(
+                controller: _noteController,
+                decoration: const InputDecoration(
+                  hintText: 'Add notes (e.g. "no onions", "extra pickles")',
+                  labelText: 'Order note',
+                  border: OutlineInputBorder(), // adds a border
+                  isDense: true,
+                ),
+                maxLines: 1,
+              ),
+            ),
             OrderItemDisplay(
               _quantity,
               'Footlong',
             ),
+            // show the current note for this order
+            if (_note.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text('Note: $_note', style: const TextStyle(fontStyle: FontStyle.italic)),
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
