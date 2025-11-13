@@ -31,6 +31,7 @@ class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
   final TextEditingController _noteController = TextEditingController();
   String _note = '';
+  String _selectedSize = 'Footlong'; // <-- new state for selected sandwich size
 
   void _increaseQuantity() {
     // read current note before updating quantity
@@ -66,7 +67,8 @@ class _OrderScreenState extends State<OrderScreen> {
           children: <Widget>[
             // Notes input field
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               child: TextField(
                 controller: _noteController,
                 decoration: const InputDecoration(
@@ -78,28 +80,80 @@ class _OrderScreenState extends State<OrderScreen> {
                 maxLines: 1,
               ),
             ),
-            OrderItemDisplay(
-              _quantity,
-              'Footlong',
-            ),
             // show the current note for this order
             if (_note.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text('Note: $_note', style: const TextStyle(fontStyle: FontStyle.italic)),
+                child: Text('Note: $_note',
+                    style: const TextStyle(fontStyle: FontStyle.italic)),
               ),
+
+            // order item now shows selected size
+            OrderItemDisplay(
+              _quantity,
+              _selectedSize,
+            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: _increaseQuantity,
-                  child: const Text('Add'),
+                ElevatedButton.icon(
+                  onPressed:
+                      _quantity < widget.maxQuantity ? _increaseQuantity : null,
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label:
+                      const Text('Add', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink.shade100,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: _decreaseQuantity,
-                  child: const Text('Remove'),
+                const SizedBox(width: 12),
+                ElevatedButton.icon(
+                  onPressed: _quantity > 0 ? _decreaseQuantity : null,
+                  icon: const Icon(Icons.remove, color: Colors.white),
+                  label: const Text('Remove',
+                      style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink.shade100,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Slider-style toggle between Footlong and Six-inch (light pink)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ToggleButtons(
+                isSelected: [
+                  _selectedSize == 'Footlong',
+                  _selectedSize == 'Six-inch'
+                ],
+                onPressed: (int index) {
+                  setState(() {
+                    _selectedSize = index == 0 ? 'Footlong' : 'Six-inch';
+                  });
+                },
+                borderRadius: BorderRadius.circular(8),
+                fillColor:
+                    Colors.pink.shade100, // light pink fill when selected
+                selectedColor: Colors.white,
+                color: Colors.black87,
+                constraints: const BoxConstraints(minWidth: 120, minHeight: 40),
+                children: const [
+                  Text('Footlong'),
+                  Text('Six-inch'),
+                ],
+              ),
             ),
           ],
         ),
@@ -117,7 +171,7 @@ class OrderItemDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200, // change to 100, 150, 300 to experiment
+      width: 300, // change to 100, 150, 300 to experiment
       height: 80, // make smaller to force overflow
       color: Colors.pink, // visible background
       alignment: Alignment.center,
