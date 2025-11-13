@@ -173,26 +173,60 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 }
 
-class OrderItemDisplay extends StatelessWidget {
-  final String itemType;
-  final int quantity;
+enum BreadType { white, wheat, wholemeal }
 
-  const OrderItemDisplay(this.quantity, this.itemType, {super.key});
+class OrderItemDisplay extends StatelessWidget {
+  final int quantity;
+  final String itemType;
+  final BreadType breadType;
+  final String orderNote;
+
+  const OrderItemDisplay({
+    super.key,
+    required this.quantity,
+    required this.itemType,
+    required this.breadType,
+    required this.orderNote,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300, // change to 100, 150, 300 to experiment
-      height: 80, // make smaller to force overflow
-      color: Colors.pink, // visible background
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        '$quantity $itemType sandwich(es): ${'🥪' * quantity}',
-        style: const TextStyle(color: Colors.white, fontSize: 16),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis, // see truncated text when too big
-        textAlign: TextAlign.center,
+    final String emojis = '🥪' * quantity;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // must match test text exactly
+        Text('$quantity ${breadType.name} $itemType sandwich(es): $emojis'),
+        const SizedBox(height: 4),
+        Text('Note: $orderNote'),
+      ],
+    );
+  }
+}
+
+class StyledButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+
+  const StyledButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, color: Colors.white),
+      label: Text(label, style: const TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
       ),
     );
   }
