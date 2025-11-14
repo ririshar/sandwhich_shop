@@ -81,6 +81,49 @@ void main() {
       await tester.pump();
       expect(find.text('Note: Extra mayo'), findsOneWidget);
     });
+
+    testWidgets('Switch toggles between six-inch and footlong',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const App());
+      await tester.pumpAndSettle();
+
+      final switchFinder = find.byType(Switch);
+      expect(switchFinder, findsOneWidget);
+
+      // initial should show 'footlong' in the UI
+      expect(find.textContaining('footlong'), findsWidgets);
+
+      // toggle to six-inch
+      await tester.tap(switchFinder);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('six-inch'), findsWidgets);
+
+      // toggle back to footlong
+      await tester.tap(switchFinder);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('footlong'), findsWidgets);
+    });
+
+    testWidgets('toggles size and toasted switches',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const App());
+      await tester.pumpAndSettle();
+
+      final sizeSwitch = find.byKey(const Key('size_switch'));
+      expect(sizeSwitch, findsOneWidget);
+
+      // toggle size switch
+      await tester.tap(sizeSwitch);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('six-inch'), findsWidgets);
+
+      // for the toasted switch test:
+      final toastSwitch = find.byKey(const Key('toasted_switch'));
+      expect(toastSwitch, findsOneWidget);
+      await tester.tap(toastSwitch);
+      await tester.pumpAndSettle();
+      // assert UI reacts accordingly (add expectation for 'toasted' state text if present)
+    });
   });
 
   group('StyledButton', () {
