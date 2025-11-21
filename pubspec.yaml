@@ -26,4 +26,12 @@ dependency_overrides:
 flutter:
   uses-material-design: true
   assets:
-    - assets/imagess/
+    - assets/images/logo.png
+    - assets/images/veggieDelight_footlong.png
+    - assets/images/veggieDelight_six_inch.png
+    - assets/images/chickenTeriyaki_footlong.png
+    - assets/images/chickenTeriyaki_six_inch.png
+    - assets/images/tunaMelt_footlong.png
+    - assets/images/tunaMelt_six_inch.png
+    - assets/images/meatballMarinara_footlong.png
+    - assets/images/meatballMarinara_six_inch.png
