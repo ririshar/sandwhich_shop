@@ -66,12 +66,10 @@ class _OrderScreenState extends State<OrderScreen> {
         breadType: _selectedBreadType,
       );
 
-      // create a CartItem and use Cart.addItem (Cart has no .add method)
       final CartItem item = CartItem(
         type: _selectedSandwichType,
         breadType: _selectedBreadType,
         isFootlong: _isFootlong,
-        // if you later add a `_isToasted` state, replace `false` with that variable
         toasted: false,
         note: _notesController.text.trim(),
         quantity: _quantity,
@@ -81,14 +79,30 @@ class _OrderScreenState extends State<OrderScreen> {
         _cart.addItem(item);
       });
 
-      String sizeText;
-      if (_isFootlong) {
-        sizeText = 'footlong';
-      } else {
-        sizeText = 'six-inch';
-      }
-      String confirmationMessage =
+      final String sizeText = _isFootlong ? 'footlong' : 'six-inch';
+      final String confirmationMessage =
           'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
+
+      // show a MaterialBanner for confirmation (remove existing banner first)
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.removeCurrentMaterialBanner();
+      messenger.showMaterialBanner(
+        MaterialBanner(
+          content: Text(confirmationMessage),
+          backgroundColor: Colors.pink.shade50,
+          actions: [
+            TextButton(
+              onPressed: () => messenger.clearMaterialBanners(),
+              child: const Text('DISMISS'),
+            ),
+          ],
+        ),
+      );
+
+      // auto-dismiss after 4 seconds
+      Future.delayed(const Duration(seconds: 4), () {
+        if (mounted) messenger.clearMaterialBanners();
+      });
 
       debugPrint(confirmationMessage);
     }
@@ -266,6 +280,37 @@ class _OrderScreenState extends State<OrderScreen> {
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
                 backgroundColor: Colors.green,
+              ),
+              // Permanent cart summary (updates when _cart changes)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Card(
+                  key: const Key('cart_summary'),
+                  color: Colors.pink.shade50,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.shopping_cart, color: Colors.pink),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cart: ${_cart.totalQuantity} ${_cart.totalQuantity == 1 ? "item" : "items"}',
+                              style: normalText,
+                            ),
+                          ],
+                        ),
+                        Text(
+                          _cart.formattedTotal(),
+                          style: heading2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
             ],
