@@ -3,6 +3,8 @@ import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/models/cart.dart';
 
+import 'views/cart_screen.dart';
+
 const TextStyle heading2 = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold,
@@ -197,123 +199,164 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Sandwich Counter',
-          style: heading1,
+        leading: SizedBox(
+          width: 48,
+          height: 48,
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              errorBuilder: (ctx, error, stack) {
+                return const Icon(Icons.broken_image, color: Colors.white);
+              },
+            ),
+          ),
         ),
+        title: const Text('Sandwich Counter', style: heading1),
       ),
-      body: Center(
+      // Use SafeArea + padding and a ConstrainedBox so content has room
+      // to expand and will scroll instead of overflowing by a few pixels.
+      body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 300,
-                child: Image.asset(
-                  _getCurrentImagePath(),
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    // show the attempted path so we can verify exact filename
-                    final attempted = _getCurrentImagePath();
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Image not found', style: normalText),
-                          const SizedBox(height: 8),
-                          Text(attempted, style: const TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
-              DropdownMenu<SandwichType>(
-                width: double.infinity,
-                label: const Text('Sandwich Type'),
-                textStyle: normalText,
-                initialSelection: _selectedSandwichType,
-                onSelected: _onSandwichTypeChanged,
-                dropdownMenuEntries: _buildSandwichTypeEntries(),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Six-inch', style: normalText),
-                  Switch(
-                    value: _isFootlong,
-                    onChanged: _onSizeChanged,
-                  ),
-                  const Text('Footlong', style: normalText),
-                ],
-              ),
-              const SizedBox(height: 20),
-              DropdownMenu<BreadType>(
-                width: double.infinity,
-                label: const Text('Bread Type'),
-                textStyle: normalText,
-                initialSelection: _selectedBreadType,
-                onSelected: _onBreadTypeChanged,
-                dropdownMenuEntries: _buildBreadTypeEntries(),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Quantity: ', style: normalText),
-                  IconButton(
-                    onPressed: _getDecreaseCallback(),
-                    icon: const Icon(Icons.remove),
-                  ),
-                  Text('$_quantity', style: heading2),
-                  IconButton(
-                    onPressed: _increaseQuantity,
-                    icon: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              StyledButton(
-                onPressed: _getAddToCartCallback(),
-                icon: Icons.add_shopping_cart,
-                label: 'Add to Cart',
-                backgroundColor: Colors.green,
-              ),
-              // Permanent cart summary (updates when _cart changes)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Card(
-                  key: const Key('cart_summary'),
-                  color: Colors.pink.shade50,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              // ensure content can at least fill the available viewport height
+              minHeight: MediaQuery.of(context).size.height -
+                  kToolbarHeight -
+                  MediaQuery.of(context).padding.vertical -
+                  40, // small extra buffer
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 300,
+                  child: Image.asset(
+                    _getCurrentImagePath(),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // show the attempted path so we can verify exact filename
+                      final attempted = _getCurrentImagePath();
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.shopping_cart, color: Colors.pink),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Cart: ${_cart.totalQuantity} ${_cart.totalQuantity == 1 ? "item" : "items"}',
-                              style: normalText,
-                            ),
+                            const Text('Image not found', style: normalText),
+                            const SizedBox(height: 8),
+                            Text(attempted,
+                                style: const TextStyle(fontSize: 12)),
                           ],
                         ),
-                        Text(
-                          _cart.formattedTotal(),
-                          style: heading2,
-                        ),
-                      ],
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                DropdownMenu<SandwichType>(
+                  width: double.infinity,
+                  label: const Text('Sandwich Type'),
+                  textStyle: normalText,
+                  initialSelection: _selectedSandwichType,
+                  onSelected: _onSandwichTypeChanged,
+                  dropdownMenuEntries: _buildSandwichTypeEntries(),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Six-inch', style: normalText),
+                    Switch(
+                      value: _isFootlong,
+                      onChanged: _onSizeChanged,
+                    ),
+                    const Text('Footlong', style: normalText),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                DropdownMenu<BreadType>(
+                  width: double.infinity,
+                  label: const Text('Bread Type'),
+                  textStyle: normalText,
+                  initialSelection: _selectedBreadType,
+                  onSelected: _onBreadTypeChanged,
+                  dropdownMenuEntries: _buildBreadTypeEntries(),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Quantity: ', style: normalText),
+                    IconButton(
+                      onPressed: _getDecreaseCallback(),
+                      icon: const Icon(Icons.remove),
+                    ),
+                    Text('$_quantity', style: heading2),
+                    IconButton(
+                      onPressed: _increaseQuantity,
+                      icon: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                StyledButton(
+                  onPressed: _getAddToCartCallback(),
+                  icon: Icons.add_shopping_cart,
+                  label: 'Add to Cart',
+                  backgroundColor: Colors.green,
+                ),
+
+                const SizedBox(height: 12),
+
+                // View Cart button — navigates to CartScreen and passes current cart
+                StyledButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => CartScreen(cart: _cart)),
+                    );
+                  },
+                  icon: Icons.shopping_cart,
+                  label: 'View Cart',
+                  backgroundColor: Colors.blueGrey,
+                ),
+
+                // Permanent cart summary (updates when _cart changes)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Card(
+                    key: const Key('cart_summary'),
+                    color: Colors.pink.shade50,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.shopping_cart,
+                                  color: Colors.pink),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Cart: ${_cart.totalQuantity} ${_cart.totalQuantity == 1 ? "item" : "items"}',
+                                style: normalText,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            _cart.formattedTotal(),
+                            style: heading2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
