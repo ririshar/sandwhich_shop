@@ -4,6 +4,7 @@ import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/models/cart.dart';
 
 import 'views/cart_screen.dart';
+import 'package:sandwich_shop/views/about_screen.dart';
 
 const TextStyle heading2 = TextStyle(
   fontSize: 20,
@@ -14,14 +15,71 @@ void main() {
   runApp(const App());
 }
 
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile', style: heading1),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              key: const Key('profile_username'),
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              key: const Key('profile_password'),
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Sandwich Shop App',
-      home: OrderScreen(maxQuantity: 5),
+      home: const OrderScreen(maxQuantity: 5),
+      routes: {
+        '/about': (context) => const AboutScreen(),
+      },
     );
   }
 }
@@ -354,7 +412,30 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+
+                const SizedBox(height: 12),
+
+                // Profile link button (bottom of order screen)
+                StyledButton(
+                  key: const Key('open_profile'),
+                  onPressed: () async {
+                    final result =
+                        await Navigator.of(context).push<Map<String, String>>(
+                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                    );
+                    if (result != null && mounted) {
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Profile saved')),
+                      );
+                    }
+                  },
+                  icon: Icons.person,
+                  label: 'Profile',
+                  backgroundColor: Colors.blueGrey,
+                ),
+
+                const SizedBox(height: 12),
               ],
             ),
           ),

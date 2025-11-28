@@ -164,3 +164,26 @@ Widget and unit tests as listed in Subtask G.
 A short README note describing keys and merge behavior.
 If you want, I can now generate the concrete code diffs and test files for Subtask A and B first (increment/decrement + delete + tests). Which subtask should I implement first?
 
+# Profile Screen Feature (verified)
+
+Summary
+- Added a simple Profile screen allowing users to enter Name, Email, Phone.
+- Navigation from OrderScreen via a "Profile" button (Key: open_profile).
+- Save validates input, shows a SnackBar, and returns profile Map via Navigator.pop.
+
+Keys and behavior
+- profile_name, profile_email, profile_phone: TextFields.
+- profile_save: Save button.
+- Validation:
+  - Name required.
+  - Email must contain '@'.
+  - Phone (if provided) digits only.
+- On valid save: SnackBar 'Profile saved', Navigator.pop(context, {'name','email','phone'}).
+
+Tests added
+- test/views/profile_screen_test.dart covers rendering, successful save, and invalid-email error.
+
+Notes
+- No authentication or persistence implemented.
+- Uses only Flutter built-in widgets and existing styles.
+
