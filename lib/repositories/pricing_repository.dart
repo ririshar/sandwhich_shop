@@ -11,4 +11,8 @@ class PricingRepository {
 
   /// Format price as GBP string, e.g. "£11.00"
   String formatPrice(double price) => '£${price.toStringAsFixed(2)}';
+
+  double calculatePrice({required int quantity, required bool isFootlong}) {
+    return totalPrice(quantity, isFootlong: isFootlong);
+  }
 }

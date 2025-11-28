@@ -40,6 +40,8 @@ class CartItem {
       toasted.hashCode ^
       note.hashCode;
 
+  Sandwich? get sandwich => null;
+
   /// Calculate total price for this line using PricingRepository.
   double lineTotal(PricingRepository pricing) {
     return pricing.totalPrice(quantity, isFootlong: isFootlong);
@@ -136,6 +138,8 @@ class Cart {
 
   /// Total quantity of all units in the cart.
   int get totalQuantity => _items.fold(0, (s, it) => s + it.quantity);
+
+  Null get countOfItems => null;
 
   /// Serialize cart to JSON-compatible map.
   Map<String, dynamic> toJson() => {
