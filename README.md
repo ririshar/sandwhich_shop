@@ -164,4 +164,98 @@ Please follow existing code style and run `flutter analyze` before submitting.
 Owner: ririshar (GitHub)
 - Repo: https://github.com/ririshar/sandwich_shop
 
+---
+
+## Building the App
+### Android
+1. Run the following command to create a release APK:
+   ```bash
+   flutter build apk --release
+   ```
+2. The APK will be generated at:
+   ```
+   build/app/outputs/flutter-apk/app-release.apk
+   ```
+
+3. Install the APK on a device:
+   ```bash
+   adb install build/app/outputs/flutter-apk/app-release.apk
+   ```
+
+### iOS
+1. Ensure you have the necessary certificates and provisioning profiles.
+2. Run the following command to create a release build:
+   ```bash
+   flutter build ios --release
+   ```
+3. Use Xcode or `flutter install` to deploy the app to a device.
+
+## Debug vs Release Comparison
+- **Size**: Release builds are smaller due to optimizations and the removal of debugging tools.
+- **Performance**: Release builds are faster and smoother, with optimized animations and startup times.
+
+### Comparing Debug and Release Builds
+1. Build the debug version:
+   ```bash
+   flutter run
+   ```
+   Observe the app's size and performance during development.
+
+2. Build the release version:
+   - For Android:
+     ```bash
+     flutter build apk --release
+     ```
+   - For iOS:
+     ```bash
+     flutter build ios --release
+     ```
+
+3. Install the release build on a device:
+   - For Android:
+     ```bash
+     adb install build/app/outputs/flutter-apk/app-release.apk
+     ```
+   - For iOS:
+     Use Xcode or `flutter install`.
+
+4. Compare the following:
+   - **Size**: Check the APK/IPA size of the release build.
+   - **Performance**: Test the app's responsiveness, animations, and startup time.
+
+### Staff Sign-Off
+After testing thoroughly:
+1. Show the release build running on a device to a member of staff.
+2. Present the updated README and discuss the size and performance differences between debug and release builds.
+
+## Testing
+The app has been thoroughly tested with integration tests to ensure functionality across all user journeys.
+
+# Sandwich Shop App
+
+## Build Instructions
+
+### Debug Build
+To build and run the debug version:
+```bash
+flutter run
+```
+
+### Release Build
+To build the release version:
+- For Android:
+  ```bash
+  flutter build apk --release
+  ```
+- For iOS:
+  ```bash
+  flutter build ios --release
+  ```
+
+Install the generated APK/IPA on your device to test the release version.
+
+## Debug vs Release Comparison
+- **Size**: The release build is significantly smaller due to optimizations.
+- **Performance**: The release build is faster, with smoother animations and reduced startup time.
+
 

@@ -156,4 +156,6 @@ class Cart {
     }
     return cart;
   }
+
+  void add(Sandwich sandwich, {required int quantity}) {}
 }
